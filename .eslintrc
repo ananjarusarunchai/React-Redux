@@ -28,5 +28,9 @@
             "pragma": "React",
             "version": "15.6.1"
         }
+    },
+    "globals": {
+        "setInterval": true,
+        "clearInterval": true
     }
 }
