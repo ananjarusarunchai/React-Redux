@@ -4,8 +4,9 @@ import * as courseAction from '../../actions/courseActions'
 import { bindActionCreators } from 'redux';
 import CourseForm from './CourseForm';
 import toastr from 'toastr';
+import { authorFormattedForDropDown } from '../../selectors/selectors';
 
-class ManageCoursePage extends React.Component {
+export class ManageCoursePage extends React.Component {
   constructor(props, context) {
     super(props, context);
 
@@ -19,9 +20,9 @@ class ManageCoursePage extends React.Component {
     this.saveCourse = this.saveCourse.bind(this);
   }
 
-  componentWillReceiveProps(nextProps){
-    if(this.props.course.id != nextProps.course.id){
-      this.setState({course: Object.assign({}, nextProps.course)});
+  componentWillReceiveProps(nextProps) {
+    if (this.props.course.id != nextProps.course.id) {
+      this.setState({ course: Object.assign({}, nextProps.course) });
     }
   }
 
@@ -32,20 +33,33 @@ class ManageCoursePage extends React.Component {
     return this.setState({ course: course });
   }
 
+  isCourseFormValid(){
+    if (this.state.course.title.length < 5) {
+      return false;
+    }
+    return true;
+  }
+
   saveCourse(event) {
     event.preventDefault();
-    this.setState({saving: true});
+    if(!this.isCourseFormValid()){
+      this.setState({ errors: { title: 'Title must be at least 5 characters.' } });
+      return;
+    }else{
+      this.setState({ errors: { } });      
+    }
+    this.setState({ saving: true });
     this.props.actions.saveCourse(this.state.course).then((result) => {
-      this.setState({saving: false});
+      this.setState({ saving: false });
       toastr.success('Course saved');
       this.redirect('/courses');
     }).catch((err) => {
       toastr.error(err);
-      this.setState({saving: false});
+      this.setState({ saving: false });
     });
   }
 
-  redirect(page){
+  redirect(page) {
     this.context.router.push(page);
   }
 
@@ -85,15 +99,9 @@ function mapStateToProps(state, ownProps) {
   if (courseId && state.courses.length > 0) {
     course = getCourseById(state.courses, courseId);
   }
-  const authorFormattedForDropDown = state.authors.map(author => {
-    return {
-      value: author.id,
-      text: author.firstName + ' ' + author.lastName
-    }
-  });
   return {
     course: course,
-    authors: authorFormattedForDropDown
+    authors: authorFormattedForDropDown(state.authors)
   };
 }
 
