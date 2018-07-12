@@ -2,7 +2,7 @@ import fs from 'fs';
 import cheerio from 'cheerio';
 import colors from 'colors';
 
-fs.read('src/index.html', 'utf8', (err, markup) => {
+fs.readFile('src/index.html', 'utf8', (err, markup) => {
     if (err) {
         console.log(err);
         return;

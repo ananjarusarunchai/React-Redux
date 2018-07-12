@@ -4,23 +4,23 @@ import colors from 'colors';
 
 process.env.NODE_ENV = 'production';
 
-console.log('Generating minified bundle for production via webpack.');
+console.log('Generating minified bundle for production via webpack. This will take a moment...'.blue);
 
 webpack(webpackConfig).run((err, stats) => {
     if (err) {
         console.log(err.bold.red);
-        return;
+        return 1;
     }
 
     const jsonStats = stats.toJson();
 
-    if (jsonStats.hasError) {
+    if (jsonStats.hasErrors) {
         return jsonStats.errors.map(error => console.log(error.red));
     }
 
-    if (jsonStats.hasWarning) {
+    if (jsonStats.hasWarnings) {
         console.log('Webpack generated the following warnings: '.bold.yellow);
-        return jsonStats.errors.map(error => console.log(error.yellow));
+        return jsonStats.warnings.map(warning => console.log(warning.yellow));
     }
 
     console.log(`Webpack stats: ${stats}`);
