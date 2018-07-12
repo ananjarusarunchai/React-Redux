@@ -9,7 +9,9 @@
         }
     },
     "plugins": [
-        "react"
+        "react",
+        "plugin1",
+        "eslint-plugin-plugin2"
     ],
     "extends": [
         "eslint:recommended",
@@ -23,6 +25,10 @@
         "no-console": 1,
         "no-unexpected-multiline": "warn"
     },
+    "env":{
+        "mocha": true,
+        "jasmine": true
+    },
     "settings": {
         "react": {
             "pragma": "React",
@@ -31,6 +37,7 @@
     },
     "globals": {
         "setInterval": true,
-        "clearInterval": true
+        "clearInterval": true,
+        "_": false
     }
 }
